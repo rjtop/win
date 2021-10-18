@@ -1,0 +1,9 @@
+数据互通（人物除外）
+
+基岩版1.17.10/20/30
+cn-hn-dx-2.natfrp.cloud:43650
+Java版1.17.1
+cn-hn-dx-1.natfrp.cloud:56571
+
+基岩版进入需要登陆微软账户，两个版本均无正版验证
+Microsoft账户注册链接：https://signup.live.com/?lic=1
