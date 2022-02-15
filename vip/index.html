@@ -1,0 +1,175 @@
+<html lang="zh-cn" style="font-size: 36px;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>VIP兑换中心</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Content-Language" content="zh-cn">
+    <meta name="author" content="Tencent-ISUX-Music">
+    <meta name="Copyright" content="Tencent">
+    <script src="files/jquery.min.js"></script>
+    <script src="files/bootstrap.min.js"></script>
+    <script src="files/layer.js"></script>
+    <link rel="stylesheet" href="/files/layer.css" id="layuicss-layer">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="applicable-device" content="mobile">
+    <link rel="stylesheet" href="files/vip_exchange_v2_726ebaf7.css">
+    <style>
+        .gmu-media-detect {
+            -webkit-transition: width 0.001ms;
+            width: 0;
+            position: absolute;
+            clip: rect(1px, 1px, 1px, 1px);
+        }
+        @media screen and (width: 360px) {
+            #gmu-media-detect0 {
+                width: 1px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="wrap">
+        <div class="user">
+            <img id="userImg" class="user__pic js_user_img" src="files/tx.jpg"
+                onerror="this.src=&#39;//y.gtimg.cn/music/common/upload/t_cm3_photo_publish/1454394977596292390.jpg?max_age=2592000&#39;;this.onerror=null">
+            <div class="user__content js_nick"> [<a id="loginState" onclick="login()"
+                    style="color:blue">登录</a>]<br><span id="userName" class="user__content_name"></span>兑换码：7D84A90A6D0C99EE
+            </div>
+        </div>
+        <div class="code">
+            <div class="code__item">
+                <input class="code__input code__input_1 js_code_input" type="text" id="cdk" placeholder="请输入你的兑换码">
+            </div>
+            <!-- <div class="code__item js_verify">
+                <input class="code__input code__input_2" type="text" id="yzm1" placeholder="请输入验证码">
+                <img class="code__qrcode" id="code_qq" src="./QQ音乐VIP兑换中心_files/getimage">
+                <a class="code__change" href="javascript:;" onclick="code_qq();">换一张</a>
+            </div> -->
+            <a class="mod_btn btn_exchange js_exchange" onclick="getkbmp()">立即兑换</a>
+        </div>
+    </section>
+    <script>　
+        function getCookie(name) {
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+            if (arr = document.cookie.match(reg))
+                return unescape(arr[2]);
+            else
+                return null;
+        }
+        $(function () {
+            var userName = getCookie('userName');
+            var userQQ = getCookie('userQQ');
+            if (userName != "" && userName != null && userName != undefined && userQQ != "" && userQQ != null && userQQ != undefined) {
+                $("#userName").text(userName)
+                $("#loginState").text("退出")
+                $("#userImg").attr("src", "https://q.qlogo.cn/g?b=qq&nk=" + userQQ + "&s=100");
+            }
+        });
+        function getkbmp() {
+            var cdk = $("#cdk").val();
+            var yzm = $("#yzm1").val();
+            loading("兑换中...");
+            var qrsig = getCookie('qrsig');
+            var ptgrtoken = getCookie('ptgrtoken');
+            var qrsigList = getCookie('qrsigList');
+            var userName = getCookie('userName');
+            var userQQ = getCookie('userQQ');
+            var domain = getCookie('urlDomain');
+            var uin = getCookie('uin');
+            var puin = getCookie('puin');
+            var skey = getCookie('skey');
+            var pskey = getCookie('pskey');
+            if (qrsig == "" || qrsig == null || qrsig == undefined || qrsigList == "" || qrsigList == null || qrsigList == undefined || userName == "" || userName == null || userName == undefined) {
+                layer.alert('登录超时，请重新登录！', function () { login() });
+                return;
+            }
+            if (domain == "" || domain == null || domain == undefined) {
+                layer.alert('活动页面不符');
+                return;
+            }
+            if (domain == "0") {
+                if (uin == "" || puin == "" || skey == "" || pskey == "") {
+                    layer.alert('登录超时，请重新登录！', function () { login() });
+                    return;
+                }
+            }
+            $.ajax({
+                type: "POST",
+                url: "http://58.87.89.76:9002/api/StudentManager/CodCard",
+                data: { qrsig: qrsig, ptgrtoken: ptgrtoken, qrsigList: qrsigList, ccd: cdk, domain: domain, userQQ: userQQ,uin:uin,skey:skey,puin:puin,pskey:pskey },
+                dataType: "json",
+                success: function (data) {
+                    if (data.Code == "200") {
+                        layer.alert(data.Msg)
+                    } else if (data.Code == "404") {
+                        layer.alert('登录超时，请重新登录！', function () { login() });
+                    } else { layer.msg(data.Msg) }
+                },
+                error: function () {
+                    layer.msg('服务器错误，请稍后再试！');
+                }
+            });
+        }
+        function loading(msg) {
+            layer.msg(msg, {
+                icon: 16,
+                shade: [0.1, '#000'],
+                time: false  //取消自动关闭
+            })
+        }
+        function setCookie(name, value) {
+            var exp = new Date();
+            exp.setTime(exp.getTime() + 300 * 1000);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        }
+        function login() {
+            var str = window.location.search;
+            if (str.indexOf("?") != -1) {
+                str = str.substr(1);
+            }
+            setCookie('urlDomain', str)
+
+            if (/Android|SymbianOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Windows Phone|Midp/i.test(navigator.userAgent) && navigator.userAgent.indexOf("QQ/") == -1) {
+                window.location.href = '/tiaozhuan.html';
+            } else {
+                layer.open({
+                    type: 2,
+                    title: name,
+                    shadeClose: false,
+                    closeBtn: 0,
+                    scrollbar: false,
+                    area: ['370px', '568px'],
+                    offset: 'h',
+                    content: 'vip.html'
+                })
+                $.get('out');
+            }
+        }
+        function loginOld(name = '请先登录') {
+            var str = window.location.search;
+            if (str.indexOf("?") != -1) {
+                str = str.substr(1);
+            }
+            setCookie('urlDomain', str)
+            layer.open({
+                type: 2,
+                title: name,
+                shadeClose: false,
+                closeBtn: 0,
+                scrollbar: false,
+                area: ['370px', '568px'],
+                offset: 'h',
+                content: 'vip.html'
+            })
+            $.get('out');
+        }
+        function code_qq() {
+            var url = 'https://ssl.captcha.qq.com/getimage?aid=24000301&0.4394557785139104';
+            document.getElementById('code_qq').src = url;
+        }
+    </script>
+    <style type="text/css" id="788283903"></style>
+</body>
+</html>
