@@ -1,7 +1,7 @@
 MC Forge模组服
 
 Java版1.12.2
-cn-hn-dx-1.natfrp.cloud:56571
+IP：119.3.60.21 
 
-模组列表：工业2，匠魂2，JEI，小地图，等价交换等
+模组列表：工业2，匠魂2，暮色森林，JEI，小地图，等价交换等
 下载模组包：https://wwi.lanzoup.com/b01hwh9xa
